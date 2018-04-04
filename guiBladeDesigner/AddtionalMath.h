@@ -87,3 +87,4 @@ void method_bisection(F& f, std::vector<T> &variables, const T left_border, cons
 	}
 	x = xn;
 }
+

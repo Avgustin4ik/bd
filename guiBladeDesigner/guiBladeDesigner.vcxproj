@@ -130,7 +130,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddtionalMath.h" />
+    <ClInclude Include="AssistBZ.h" />
     <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="Circle.h" />
+    <ClInclude Include="Condition.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Objective_function.h" />

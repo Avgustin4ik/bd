@@ -337,7 +337,7 @@ public:
 		}
 		//recompute(variables);
 		curvatureRefresh(variables);
-		return coincidence_condition(variables) + tangent_condition() /*+ curvature_condition()*/;
+		return coincidence_condition(variables) + tangent_condition()/* + curvature_condition()*/;
 	}
 	void add_PPoint(TVector &x)
 	{
@@ -375,8 +375,12 @@ public:
 	}
 	double operator () (const vector<T> &variables)
 	{
-		return coincidence_condition(variables) + tangent_condition()/* + curvature_condition()*/;
+		return coincidence_condition(variables) + tangent_condition() /*+ curvature_condition()*/;
 	}
+	/*double operator = (const vector<T> &variables)
+	{
+		return coincidence_condition(variables) + tangent_condition() + curvature_condition();
+	}*/
 };
 
 

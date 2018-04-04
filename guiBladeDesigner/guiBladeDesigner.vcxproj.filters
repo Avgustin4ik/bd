@@ -83,5 +83,14 @@
     <ClInclude Include="AddtionalMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AssistBZ.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

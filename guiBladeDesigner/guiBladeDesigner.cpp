@@ -5,11 +5,21 @@ guiBladeDesigner::guiBladeDesigner(QWidget *parent)
 {
 	ui.setupUi(this);
 	ui.globalPlot->xAxis->setRange(-0.25, 1.25);
-	ui.globalPlot->yAxis->setRange(-0.5, 1);
+	ui.globalPlot->yAxis->setRange(-0.5, 0.5);
 	ui.additionalPlot->xAxis->setRange(0, 1);
 	ui.globalPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-	//Variables initializion
+	qcp_inletEdge = new QCPItemEllipse(ui.globalPlot);
+	qcp_outletEdge = new QCPItemEllipse(ui.globalPlot);
+	qcp_inletEdge->setPen(assistPen);
+	qcp_outletEdge->setPen(assistPen);
 
+	read_edge();
+	qcp_inletEdge->bottomRight->setCoords(inlet_radius, -inlet_radius);
+	qcp_inletEdge->topLeft->setCoords(-inlet_radius, inlet_radius);
+	//Variables initializion
+	read_xMax();
+	read_camberAngles();
+	plotPoint(xMax);
 	//Pen settings
 	ppPen.setColor(Qt::red);	ppPen.setWidth(4);	ppPen.setStyle(Qt::DashLine);
 	bzPen.setColor(Qt::blue);	bzPen.setWidth(4);	bzPen.setStyle(Qt::SolidLine);
@@ -17,17 +27,18 @@ guiBladeDesigner::guiBladeDesigner(QWidget *parent)
 	connect(ui.xMaxEdit, SIGNAL(editingFinished()), this, SLOT(updateCamberline()));
 	connect(ui.yMaxEdit, SIGNAL(editingFinished()), this, SLOT(updateCamberline()));
 	connect(ui.alpha1Edit, SIGNAL(editingFinished()), this, SLOT(updateCamberline()));
-	//connect(ui.alpha2Edit, SIGNAL(editingFinished()), this, SLOT(updateCamberline()));
-
+	connect(ui.alpha2Edit, SIGNAL(editingFinished()), this, SLOT(updateCamberline()));
+	connect(ui.inlet_radiusEdit, SIGNAL(editingFinished()), this, SLOT(read_edge()));
+	connect(ui.outlet_radiusEdit, SIGNAL(editingFinished()), this, SLOT(read_edge()));
 	//Math setup
 	using PP = vector<Vertex2D<float32>>;
 	using P = Vertex2D<float32>;
-	camberCurve.setPPoints(PP(
+	/*camberCurve.setPPoints(PP(
 		{ P(0.0,0.0),
 		P(0.5 * cos(60 * PI / 180.0), 0.5 *sin(60 * PI / 180.0)),
 		P(1 - 0.5 *cos(21.5 * PI / 180.0), 0.5 *sin(21.5 * PI / 180.0)),
-		P(1.0, 0.0) }));
-	read_xMax();
+		P(1.0, 0.0) }));*/
+	//read_xMax();
 	connect(ui.computeCamberButton, SIGNAL(clicked()), this, SLOT(camberButtonClicked()));
 }
 
@@ -43,7 +54,6 @@ void guiBladeDesigner::plotCurve(BezierCurve<float32> &curve)
 	graphBZ->setPen(bzPen);
 	graphPP->addData(getPX(curve), getPY(curve));
 	graphBZ->addData(getBX(curve), getBY(curve));
-	graphBZ->setAntialiased(true);
 	ui.globalPlot->replot();
 }
 
@@ -62,16 +72,19 @@ void guiBladeDesigner::plotCurvature(BezierCurve<float32>& curve)
 	ui.additionalPlot->replot();
 }
 
+
+
 void guiBladeDesigner::updateCamberline()
 {
 	read_xMax();
-	m_alpha1 = ui.alpha1Edit->text().toDouble();
+	read_camberAngles();
 	plotPoint(xMax);
 	//m_alpha2 = ui.alpha2Edit->text().toDouble();
 }
 
 void guiBladeDesigner::camberButtonClicked()
 {
+	using namespace cppoptlib;
 	CamberLineFunction<float32> fCamber(camberCurve, lineCurve, xMax);
 	BfgsSolver<CamberLineFunction<float32>> solver;
 	VectorXd x(2); x << 0.3, 0.3;
@@ -87,14 +100,14 @@ void guiBladeDesigner::camberButtonClicked()
 		vector<float32> vx;
 		for (size_t i = 0; i < x.size(); i++)	vx.emplace_back(x[i]);
 		fCamber.recompute(vx);
-		if (fCamber.value(x) > 1e-5)
+		if (fCamber.value(x) > 1e-3)
 		{
 			x = xInit;
 			fCamber.add_PPoint(x);
-			vx.clear();
-			for (size_t i = 0; i < x.size(); i++)	vx.emplace_back(x[i]);
-			fCamber.recompute(vx);
-			xInit = x;
+			//vx.clear();
+			//for (size_t i = 0; i < x.size(); i++)	vx.emplace_back(x[i]);
+			//fCamber.recompute(vx);
+			xInit = x;	
 		}
 		else break;
 	}
@@ -110,6 +123,35 @@ void guiBladeDesigner::read_xMax()
 {
 	xMax.x = ui.xMaxEdit->text().toFloat();
 	xMax.y = ui.yMaxEdit->text().toFloat();
+}
+
+void guiBladeDesigner::read_camberAngles()
+{
+	m_alpha1 = ui.alpha1Edit->text().toFloat();
+	m_alpha2 = ui.alpha2Edit->text().toFloat();
+	using PP = vector<Vertex2D<float32>>;
+	using P = Vertex2D<float32>;
+	camberCurve.setPPoints(PP(
+		{ P(0.0,0.0),
+		P(0.5 * cos(m_alpha1 * PI / 180.0), 0.5 *sin(m_alpha1 * PI / 180.0)),
+		P(1 - 0.5 *cos(m_alpha2 * PI / 180.0), 0.5 *sin(m_alpha2 * PI / 180.0)),
+		P(1.0, 0.0) }));
+}
+
+void guiBladeDesigner::read_edge()
+{
+	inlet_radius = ui.inlet_radiusEdit->text().toFloat();
+	inlet_omega = ui.inlet_omegaEdit->text().toFloat();
+	outlet_radius = ui.outlet_radiusEdit->text().toFloat();
+	outlet_omega = ui.outlet_omegaEdit->text().toFloat();
+	qcp_inletEdge->topLeft->setCoords(-inlet_radius, inlet_radius);
+	qcp_inletEdge->bottomRight->setCoords(inlet_radius, -inlet_radius);
+	qcp_outletEdge->topLeft->setCoords(-outlet_radius + 1, outlet_radius);
+	qcp_outletEdge->bottomRight->setCoords(outlet_radius + 1, -outlet_radius);
+	ui.globalPlot->replot();
+	//plot(inletEdge);
+	//plot(outletEdge);
+
 }
 
 void guiBladeDesigner::plotPoint(const Vertex2D<float32>& point)
