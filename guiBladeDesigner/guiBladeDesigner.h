@@ -15,6 +15,7 @@ class guiBladeDesigner : public QMainWindow
 public:
 	guiBladeDesigner(QWidget *parent = Q_NULLPTR);
 private slots:
+//POEHALI
 	void plotCurve(BezierCurve<float32> &curve);
 	void plotPoint(const Vertex2D<float32> &ptr);
 	void plotCurvature(BezierCurve<float32> &curve);
