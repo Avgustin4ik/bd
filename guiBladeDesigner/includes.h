@@ -1,12 +1,14 @@
 #pragma once
 #include <qcustomplot.h>
-#include "cppoptlib\meta.h"
-#include "cppoptlib\problem.h"
-#include "cppoptlib\solver\bfgssolver.h"
+//#include "cppoptlib\meta.h"
+//#include "cppoptlib\problem.h"
+//#include "cppoptlib\solver\bfgssolver.h"
 #include <BezierCurve.h>
 #include <Objective_function.h>
-#include <Condition.h>
+#include <Condition.h> 
 #include <Circle.h>
+#include <Flags.h>
+#include "SidesFunction.h"
 
 template <typename T>
 vector<Vertex2D<T>> getEdgePoints(const bool &isLeadingEdge, BezierCurve<T> &curve, const T &omega, const T &radius)

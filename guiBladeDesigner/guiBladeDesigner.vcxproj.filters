@@ -47,9 +47,15 @@
     <QtMoc Include="qcustomplot.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="UserSpinBox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="guiBladeDesigner.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="config.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -83,14 +89,58 @@
     <ClInclude Include="AddtionalMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssistBZ.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Condition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Circle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SidesFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FishBone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BZCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ellipse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CamberCircle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Icons\if_download_216183.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_edit_216184.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_export-outline_216189.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_folder-open_1608888.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_ic_find_in_page_48px_352363.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_ic_folder_48px_352374.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_ic_save_48px_352084.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Icons\if_ic_settings_48px_352095.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

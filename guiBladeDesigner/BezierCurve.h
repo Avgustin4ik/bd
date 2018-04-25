@@ -4,6 +4,7 @@
 #include <vector>
 #include "Setups.h"
 #include "AddtionalMath.h"
+#include "CamberCircle.h"
 
 using namespace std;
 template <typename T>
@@ -26,9 +27,9 @@ public:
 	BezierCurve()	//стандартная кривая с 3 определяющими точками с координатами (0,0); (0.5,0.5); и (1,0)
 		:m(2)
 	{
-		PPoints.push_back(Vertex2D<float32>(0, 0));
-		PPoints.push_back(Vertex2D<float32>(0.5, 0.5));
-		PPoints.push_back(Vertex2D<float32>(1, 0));
+		PPoints.push_back(Vertex2D<T>(0, 0));
+		PPoints.push_back(Vertex2D<T>(0.5, 0.5));
+		PPoints.push_back(Vertex2D<T>(1, 0));
 		compute();
 	}
 /*	BezierCurve(uint const _m)	//стандартная кривая с 3 определяющими точками с координатами (0,0); (0.5,0.5); и (1,0)
@@ -190,6 +191,21 @@ public:
 		m = PPoints.size() - 1;
 		compute();
 	}
+	Vertex2D<T> getPointFromX(const T &x)
+	{
+		if ((x < 0) || (x > 1))	throw(exception());
+		function_getTformX<T> f(*this, x);
+		vector<T> variables;
+		T t = 0.5;
+		variables.push_back(t);
+		method_bisection(f, variables, T(0.0), T(1.0));
+		return (this->getPoint(variables[0]));
+	}
+	BezierCurve<T> operator = (const BezierCurve<T> &bz)
+	{
+		this->setPPoints(bz.PPoints);
+		return (*this);
+	}
 };
 template <typename T>
 class function_bezier2point
@@ -209,4 +225,20 @@ public:
 private:
 	BezierCurve<T>& f;
 	Vertex2D<T> point;
+};
+template <typename T>
+class function_getTformX
+{
+public:
+	function_getTformX(BezierCurve<T> &_f, const T &_x)	:f(_f), x(_x) {};
+	T operator () (const vector<T> &var) const
+	{
+		T t = var[0];
+		t = EQUAL2EPS(t, 0.0, 1e-3);
+		t = EQUAL2EPS(t, 1.0, 1e-3);
+		return (fabsf(f.getPoint(t).x - x));
+	}
+private:
+	BezierCurve<T> &f;
+	T x;
 };

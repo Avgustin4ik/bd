@@ -2,14 +2,9 @@
 #include <math.h>
 #include <vector>
 #include "Matrix.h"
-#ifndef _DEBUG
 #include "cppoptlib\meta.h"
 #include "cppoptlib\problem.h"
 #include "cppoptlib\solver\bfgssolver.h"
-#include "cppoptlib\solver\lbfgsbsolver.h"
-#include "cppoptlib\solver\newtondescentsolver.h"
-#include "cppoptlib\solver\lbfgssolver.h"
-#endif // !_DEBUG
 
 
 
@@ -37,14 +32,3 @@ public:
 	Configuration() :iterations_limit(200), h(0.001), alpha(0.1), curvature_eps(0.001) {};
 	~Configuration() {};
 };
-
-//namespace setups
-//{
-//
-//
-//	const float32 _curvature_eps = 0.001;
-//	const uint _iterations_limit = 200;
-//	float32 _h = 0.001;//Приращение аргумента при нахождении производной	
-//	float32 _alpha = 1;//Коэффициент релаксации
-//	int _pointsCount = 10;
-//}

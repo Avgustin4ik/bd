@@ -1,4 +1,12 @@
 <RCC>
-    <qresource prefix="guiBladeDesigner">
-    </qresource>
+  <qresource prefix="guiBladeDesigner">
+    <file>Resources/Icons/if_download_216183.png</file>
+    <file>Resources/Icons/if_edit_216184.png</file>
+    <file>Resources/Icons/if_export-outline_216189.png</file>
+    <file>Resources/Icons/if_folder-open_1608888.png</file>
+    <file>Resources/Icons/if_ic_find_in_page_48px_352363.png</file>
+    <file>Resources/Icons/if_ic_folder_48px_352374.png</file>
+    <file>Resources/Icons/if_ic_save_48px_352084.png</file>
+    <file>Resources/Icons/if_ic_settings_48px_352095.png</file>
+  </qresource>
 </RCC>

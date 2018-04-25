@@ -13,17 +13,16 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -34,56 +33,28 @@ QT_BEGIN_NAMESPACE
 class Ui_guiBladeDesignerClass
 {
 public:
+    QAction *actionRead;
+    QAction *actionSave;
+    QAction *actionExit;
+    QAction *actionConfig;
+    QAction *actionExport_to_AutoCad;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *plotLayout;
     QCustomPlot *globalPlot;
     QCustomPlot *additionalPlot;
     QVBoxLayout *toolsLayout;
-    QHBoxLayout *xMaxLayout;
-    QLabel *label;
-    QLineEdit *xMaxEdit;
-    QDoubleSpinBox *xMaxSpinBox;
-    QComboBox *xMaxComboBox;
-    QHBoxLayout *yMaxLayout;
-    QLabel *label_2;
-    QLineEdit *yMaxEdit;
-    QDoubleSpinBox *yMaxSpinBox;
-    QComboBox *yMaxComboBox;
-    QHBoxLayout *horizontalLayout_3;
-    QLabel *label_4;
-    QLineEdit *alpha1Edit;
-    QDoubleSpinBox *alpha1DoubleSpinBox;
-    QComboBox *alpha1ComboBox;
-    QHBoxLayout *horizontalLayout_2;
-    QLabel *label_3;
-    QLineEdit *alpha2Edit;
-    QDoubleSpinBox *alpha2DoubleSpinBox;
-    QComboBox *comboBox;
-    QHBoxLayout *horizontalLayout_5;
-    QLabel *label_5;
-    QLineEdit *inlet_radiusEdit;
-    QDoubleSpinBox *doubleSpinBox;
-    QComboBox *comboBox_2;
-    QHBoxLayout *horizontalLayout_6;
-    QLabel *label_6;
-    QLineEdit *outlet_radiusEdit;
-    QDoubleSpinBox *doubleSpinBox_2;
-    QComboBox *comboBox_3;
-    QHBoxLayout *horizontalLayout_7;
-    QLabel *label_7;
-    QLineEdit *inlet_omegaEdit;
-    QDoubleSpinBox *doubleSpinBox_3;
-    QComboBox *comboBox_4;
-    QHBoxLayout *horizontalLayout_8;
-    QLabel *label_8;
-    QLineEdit *outlet_omegaEdit;
-    QDoubleSpinBox *doubleSpinBox_4;
-    QComboBox *comboBox_5;
+    QTabWidget *tab_panel;
+    QWidget *tab_parametrs;
+    QHBoxLayout *horizontalLayout_9;
+    QTableWidget *parametrsTable;
+    QWidget *tab_cascade;
     QVBoxLayout *tool2Layout;
     QSpacerItem *verticalSpacer;
     QPushButton *computeCamberButton;
+    QPushButton *computeSuctionSideButton;
     QMenuBar *menuBar;
+    QMenu *menuFile;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -91,7 +62,30 @@ public:
     {
         if (guiBladeDesignerClass->objectName().isEmpty())
             guiBladeDesignerClass->setObjectName(QStringLiteral("guiBladeDesignerClass"));
-        guiBladeDesignerClass->resize(1147, 755);
+        guiBladeDesignerClass->resize(1214, 794);
+        actionRead = new QAction(guiBladeDesignerClass);
+        actionRead->setObjectName(QStringLiteral("actionRead"));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/guiBladeDesigner/Resources/Icons/if_ic_find_in_page_48px_352363.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionRead->setIcon(icon);
+        actionSave = new QAction(guiBladeDesignerClass);
+        actionSave->setObjectName(QStringLiteral("actionSave"));
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/guiBladeDesigner/Resources/Icons/if_ic_save_48px_352084.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSave->setIcon(icon1);
+        actionExit = new QAction(guiBladeDesignerClass);
+        actionExit->setObjectName(QStringLiteral("actionExit"));
+        actionConfig = new QAction(guiBladeDesignerClass);
+        actionConfig->setObjectName(QStringLiteral("actionConfig"));
+        actionConfig->setEnabled(false);
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/guiBladeDesigner/Resources/Icons/if_ic_settings_48px_352095.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionConfig->setIcon(icon2);
+        actionExport_to_AutoCad = new QAction(guiBladeDesignerClass);
+        actionExport_to_AutoCad->setObjectName(QStringLiteral("actionExport_to_AutoCad"));
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/guiBladeDesigner/Resources/Icons/if_export-outline_216189.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionExport_to_AutoCad->setIcon(icon3);
         centralWidget = new QWidget(guiBladeDesignerClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -136,369 +130,70 @@ public:
         toolsLayout->setSpacing(10);
         toolsLayout->setObjectName(QStringLiteral("toolsLayout"));
         toolsLayout->setContentsMargins(20, 20, 20, 20);
-        xMaxLayout = new QHBoxLayout();
-        xMaxLayout->setSpacing(5);
-        xMaxLayout->setObjectName(QStringLiteral("xMaxLayout"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        tab_panel = new QTabWidget(centralWidget);
+        tab_panel->setObjectName(QStringLiteral("tab_panel"));
+        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Expanding);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy3);
-        label->setMinimumSize(QSize(80, 20));
-        label->setMaximumSize(QSize(80, 20));
-        QFont font;
-        font.setPointSize(12);
-        font.setBold(false);
-        font.setWeight(50);
-        label->setFont(font);
-        label->setAutoFillBackground(false);
-        label->setLineWidth(0);
-        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        xMaxLayout->addWidget(label);
-
-        xMaxEdit = new QLineEdit(centralWidget);
-        xMaxEdit->setObjectName(QStringLiteral("xMaxEdit"));
-        sizePolicy3.setHeightForWidth(xMaxEdit->sizePolicy().hasHeightForWidth());
-        xMaxEdit->setSizePolicy(sizePolicy3);
-        xMaxEdit->setMinimumSize(QSize(80, 20));
-        xMaxEdit->setMaximumSize(QSize(80, 20));
-        xMaxEdit->setAlignment(Qt::AlignCenter);
-        xMaxEdit->setReadOnly(false);
-        xMaxEdit->setProperty("value", QVariant(0));
-
-        xMaxLayout->addWidget(xMaxEdit);
-
-        xMaxSpinBox = new QDoubleSpinBox(centralWidget);
-        xMaxSpinBox->setObjectName(QStringLiteral("xMaxSpinBox"));
-        sizePolicy3.setHeightForWidth(xMaxSpinBox->sizePolicy().hasHeightForWidth());
-        xMaxSpinBox->setSizePolicy(sizePolicy3);
-        xMaxSpinBox->setMinimumSize(QSize(80, 20));
-        xMaxSpinBox->setMaximumSize(QSize(80, 20));
-
-        xMaxLayout->addWidget(xMaxSpinBox);
-
-        xMaxComboBox = new QComboBox(centralWidget);
-        xMaxComboBox->addItem(QString());
-        xMaxComboBox->addItem(QString());
-        xMaxComboBox->addItem(QString());
-        xMaxComboBox->setObjectName(QStringLiteral("xMaxComboBox"));
-        sizePolicy3.setHeightForWidth(xMaxComboBox->sizePolicy().hasHeightForWidth());
-        xMaxComboBox->setSizePolicy(sizePolicy3);
-        xMaxComboBox->setMinimumSize(QSize(80, 20));
-        xMaxComboBox->setMaximumSize(QSize(80, 20));
-
-        xMaxLayout->addWidget(xMaxComboBox);
-
-
-        toolsLayout->addLayout(xMaxLayout);
-
-        yMaxLayout = new QHBoxLayout();
-        yMaxLayout->setSpacing(5);
-        yMaxLayout->setObjectName(QStringLiteral("yMaxLayout"));
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setEnabled(true);
-        sizePolicy3.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
-        label_2->setSizePolicy(sizePolicy3);
-        label_2->setMinimumSize(QSize(80, 20));
-        label_2->setMaximumSize(QSize(80, 20));
-        QFont font1;
-        font1.setPointSize(12);
-        label_2->setFont(font1);
-        label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        yMaxLayout->addWidget(label_2);
-
-        yMaxEdit = new QLineEdit(centralWidget);
-        yMaxEdit->setObjectName(QStringLiteral("yMaxEdit"));
-        sizePolicy3.setHeightForWidth(yMaxEdit->sizePolicy().hasHeightForWidth());
-        yMaxEdit->setSizePolicy(sizePolicy3);
-        yMaxEdit->setMinimumSize(QSize(80, 20));
-        yMaxEdit->setMaximumSize(QSize(80, 20));
-        yMaxEdit->setAlignment(Qt::AlignCenter);
-        yMaxEdit->setReadOnly(false);
-
-        yMaxLayout->addWidget(yMaxEdit);
-
-        yMaxSpinBox = new QDoubleSpinBox(centralWidget);
-        yMaxSpinBox->setObjectName(QStringLiteral("yMaxSpinBox"));
-        sizePolicy3.setHeightForWidth(yMaxSpinBox->sizePolicy().hasHeightForWidth());
-        yMaxSpinBox->setSizePolicy(sizePolicy3);
-        yMaxSpinBox->setMinimumSize(QSize(80, 20));
-        yMaxSpinBox->setMaximumSize(QSize(80, 20));
-
-        yMaxLayout->addWidget(yMaxSpinBox);
-
-        yMaxComboBox = new QComboBox(centralWidget);
-        yMaxComboBox->addItem(QString());
-        yMaxComboBox->addItem(QString());
-        yMaxComboBox->addItem(QString());
-        yMaxComboBox->setObjectName(QStringLiteral("yMaxComboBox"));
-        sizePolicy3.setHeightForWidth(yMaxComboBox->sizePolicy().hasHeightForWidth());
-        yMaxComboBox->setSizePolicy(sizePolicy3);
-        yMaxComboBox->setMinimumSize(QSize(80, 20));
-        yMaxComboBox->setMaximumSize(QSize(80, 20));
-
-        yMaxLayout->addWidget(yMaxComboBox);
-
-
-        toolsLayout->addLayout(yMaxLayout);
-
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(5);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        label_4 = new QLabel(centralWidget);
-        label_4->setObjectName(QStringLiteral("label_4"));
-        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
-        label_4->setSizePolicy(sizePolicy4);
-        label_4->setMaximumSize(QSize(80, 16777215));
-        label_4->setFont(font1);
-        label_4->setTextFormat(Qt::AutoText);
-        label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_3->addWidget(label_4);
-
-        alpha1Edit = new QLineEdit(centralWidget);
-        alpha1Edit->setObjectName(QStringLiteral("alpha1Edit"));
-        sizePolicy3.setHeightForWidth(alpha1Edit->sizePolicy().hasHeightForWidth());
-        alpha1Edit->setSizePolicy(sizePolicy3);
-        alpha1Edit->setMaximumSize(QSize(80, 16777215));
-        alpha1Edit->setAlignment(Qt::AlignCenter);
-        alpha1Edit->setReadOnly(false);
-
-        horizontalLayout_3->addWidget(alpha1Edit);
-
-        alpha1DoubleSpinBox = new QDoubleSpinBox(centralWidget);
-        alpha1DoubleSpinBox->setObjectName(QStringLiteral("alpha1DoubleSpinBox"));
-        sizePolicy3.setHeightForWidth(alpha1DoubleSpinBox->sizePolicy().hasHeightForWidth());
-        alpha1DoubleSpinBox->setSizePolicy(sizePolicy3);
-        alpha1DoubleSpinBox->setMinimumSize(QSize(80, 20));
-        alpha1DoubleSpinBox->setMaximumSize(QSize(80, 20));
-
-        horizontalLayout_3->addWidget(alpha1DoubleSpinBox);
-
-        alpha1ComboBox = new QComboBox(centralWidget);
-        alpha1ComboBox->addItem(QString());
-        alpha1ComboBox->addItem(QString());
-        alpha1ComboBox->addItem(QString());
-        alpha1ComboBox->setObjectName(QStringLiteral("alpha1ComboBox"));
-        sizePolicy3.setHeightForWidth(alpha1ComboBox->sizePolicy().hasHeightForWidth());
-        alpha1ComboBox->setSizePolicy(sizePolicy3);
-        alpha1ComboBox->setMaximumSize(QSize(80, 16777215));
-
-        horizontalLayout_3->addWidget(alpha1ComboBox);
-
-
-        toolsLayout->addLayout(horizontalLayout_3);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(5);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QStringLiteral("label_3"));
-        sizePolicy4.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
-        label_3->setSizePolicy(sizePolicy4);
-        label_3->setMinimumSize(QSize(80, 20));
-        label_3->setMaximumSize(QSize(80, 20));
-        label_3->setFont(font1);
-        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_2->addWidget(label_3);
-
-        alpha2Edit = new QLineEdit(centralWidget);
-        alpha2Edit->setObjectName(QStringLiteral("alpha2Edit"));
-        alpha2Edit->setMinimumSize(QSize(80, 20));
-        alpha2Edit->setMaximumSize(QSize(80, 20));
-        alpha2Edit->setAlignment(Qt::AlignCenter);
-        alpha2Edit->setReadOnly(false);
-
-        horizontalLayout_2->addWidget(alpha2Edit);
-
-        alpha2DoubleSpinBox = new QDoubleSpinBox(centralWidget);
-        alpha2DoubleSpinBox->setObjectName(QStringLiteral("alpha2DoubleSpinBox"));
-        alpha2DoubleSpinBox->setMinimumSize(QSize(80, 20));
-        alpha2DoubleSpinBox->setMaximumSize(QSize(80, 20));
-
-        horizontalLayout_2->addWidget(alpha2DoubleSpinBox);
-
-        comboBox = new QComboBox(centralWidget);
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->setObjectName(QStringLiteral("comboBox"));
-        comboBox->setMinimumSize(QSize(80, 20));
-        comboBox->setMaximumSize(QSize(80, 20));
-
-        horizontalLayout_2->addWidget(comboBox);
-
-
-        toolsLayout->addLayout(horizontalLayout_2);
-
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        label_5 = new QLabel(centralWidget);
-        label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setMaximumSize(QSize(80, 20));
-        label_5->setSizeIncrement(QSize(80, 20));
-        label_5->setFont(font1);
-        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_5->addWidget(label_5);
-
-        inlet_radiusEdit = new QLineEdit(centralWidget);
-        inlet_radiusEdit->setObjectName(QStringLiteral("inlet_radiusEdit"));
-        inlet_radiusEdit->setMaximumSize(QSize(80, 20));
-        inlet_radiusEdit->setSizeIncrement(QSize(80, 20));
-        inlet_radiusEdit->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_5->addWidget(inlet_radiusEdit);
-
-        doubleSpinBox = new QDoubleSpinBox(centralWidget);
-        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
-        doubleSpinBox->setMaximumSize(QSize(80, 20));
-        doubleSpinBox->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_5->addWidget(doubleSpinBox);
-
-        comboBox_2 = new QComboBox(centralWidget);
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->setObjectName(QStringLiteral("comboBox_2"));
-        comboBox_2->setMaximumSize(QSize(80, 20));
-        comboBox_2->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_5->addWidget(comboBox_2);
-
-
-        toolsLayout->addLayout(horizontalLayout_5);
-
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        label_6 = new QLabel(centralWidget);
-        label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setMaximumSize(QSize(80, 20));
-        label_6->setSizeIncrement(QSize(80, 20));
-        label_6->setFont(font1);
-        label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_6->addWidget(label_6);
-
-        outlet_radiusEdit = new QLineEdit(centralWidget);
-        outlet_radiusEdit->setObjectName(QStringLiteral("outlet_radiusEdit"));
-        outlet_radiusEdit->setMaximumSize(QSize(80, 20));
-        outlet_radiusEdit->setSizeIncrement(QSize(80, 20));
-        outlet_radiusEdit->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_6->addWidget(outlet_radiusEdit);
-
-        doubleSpinBox_2 = new QDoubleSpinBox(centralWidget);
-        doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
-        doubleSpinBox_2->setMaximumSize(QSize(80, 20));
-        doubleSpinBox_2->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_6->addWidget(doubleSpinBox_2);
-
-        comboBox_3 = new QComboBox(centralWidget);
-        comboBox_3->addItem(QString());
-        comboBox_3->addItem(QString());
-        comboBox_3->addItem(QString());
-        comboBox_3->setObjectName(QStringLiteral("comboBox_3"));
-        comboBox_3->setMaximumSize(QSize(80, 20));
-        comboBox_3->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_6->addWidget(comboBox_3);
-
-
-        toolsLayout->addLayout(horizontalLayout_6);
-
-        horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setSpacing(6);
-        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        label_7 = new QLabel(centralWidget);
-        label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setMaximumSize(QSize(80, 20));
-        label_7->setSizeIncrement(QSize(80, 20));
-        label_7->setFont(font1);
-        label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_7->addWidget(label_7);
-
-        inlet_omegaEdit = new QLineEdit(centralWidget);
-        inlet_omegaEdit->setObjectName(QStringLiteral("inlet_omegaEdit"));
-        inlet_omegaEdit->setMaximumSize(QSize(80, 20));
-        inlet_omegaEdit->setSizeIncrement(QSize(80, 20));
-        inlet_omegaEdit->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_7->addWidget(inlet_omegaEdit);
-
-        doubleSpinBox_3 = new QDoubleSpinBox(centralWidget);
-        doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
-        doubleSpinBox_3->setMaximumSize(QSize(80, 20));
-        doubleSpinBox_3->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_7->addWidget(doubleSpinBox_3);
-
-        comboBox_4 = new QComboBox(centralWidget);
-        comboBox_4->addItem(QString());
-        comboBox_4->addItem(QString());
-        comboBox_4->addItem(QString());
-        comboBox_4->setObjectName(QStringLiteral("comboBox_4"));
-        comboBox_4->setMaximumSize(QSize(80, 20));
-        comboBox_4->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_7->addWidget(comboBox_4);
-
-
-        toolsLayout->addLayout(horizontalLayout_7);
-
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        label_8 = new QLabel(centralWidget);
-        label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setMaximumSize(QSize(80, 20));
-        label_8->setSizeIncrement(QSize(80, 20));
-        label_8->setFont(font1);
-        label_8->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        horizontalLayout_8->addWidget(label_8);
-
-        outlet_omegaEdit = new QLineEdit(centralWidget);
-        outlet_omegaEdit->setObjectName(QStringLiteral("outlet_omegaEdit"));
-        outlet_omegaEdit->setMaximumSize(QSize(80, 20));
-        outlet_omegaEdit->setSizeIncrement(QSize(80, 20));
-        outlet_omegaEdit->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_8->addWidget(outlet_omegaEdit);
-
-        doubleSpinBox_4 = new QDoubleSpinBox(centralWidget);
-        doubleSpinBox_4->setObjectName(QStringLiteral("doubleSpinBox_4"));
-        doubleSpinBox_4->setMaximumSize(QSize(80, 20));
-        doubleSpinBox_4->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_8->addWidget(doubleSpinBox_4);
-
-        comboBox_5 = new QComboBox(centralWidget);
-        comboBox_5->addItem(QString());
-        comboBox_5->addItem(QString());
-        comboBox_5->addItem(QString());
-        comboBox_5->setObjectName(QStringLiteral("comboBox_5"));
-        comboBox_5->setMaximumSize(QSize(80, 20));
-        comboBox_5->setSizeIncrement(QSize(80, 20));
-
-        horizontalLayout_8->addWidget(comboBox_5);
-
-
-        toolsLayout->addLayout(horizontalLayout_8);
+        sizePolicy3.setHeightForWidth(tab_panel->sizePolicy().hasHeightForWidth());
+        tab_panel->setSizePolicy(sizePolicy3);
+        tab_panel->setMinimumSize(QSize(0, 0));
+        tab_parametrs = new QWidget();
+        tab_parametrs->setObjectName(QStringLiteral("tab_parametrs"));
+        horizontalLayout_9 = new QHBoxLayout(tab_parametrs);
+        horizontalLayout_9->setSpacing(6);
+        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        parametrsTable = new QTableWidget(tab_parametrs);
+        if (parametrsTable->columnCount() < 2)
+            parametrsTable->setColumnCount(2);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        parametrsTable->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        parametrsTable->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+        if (parametrsTable->rowCount() < 13)
+            parametrsTable->setRowCount(13);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(0, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(1, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(2, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(3, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(4, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(5, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(6, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(7, __qtablewidgetitem9);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(8, __qtablewidgetitem10);
+        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(9, __qtablewidgetitem11);
+        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(10, __qtablewidgetitem12);
+        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(11, __qtablewidgetitem13);
+        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
+        parametrsTable->setVerticalHeaderItem(12, __qtablewidgetitem14);
+        parametrsTable->setObjectName(QStringLiteral("parametrsTable"));
+        parametrsTable->setMinimumSize(QSize(270, 0));
+        parametrsTable->setShowGrid(true);
+        parametrsTable->setGridStyle(Qt::SolidLine);
+        parametrsTable->setWordWrap(true);
+        parametrsTable->setCornerButtonEnabled(true);
+
+        horizontalLayout_9->addWidget(parametrsTable);
+
+        tab_panel->addTab(tab_parametrs, QString());
+        tab_cascade = new QWidget();
+        tab_cascade->setObjectName(QStringLiteral("tab_cascade"));
+        tab_panel->addTab(tab_cascade, QString());
+
+        toolsLayout->addWidget(tab_panel);
 
         tool2Layout = new QVBoxLayout();
         tool2Layout->setSpacing(6);
@@ -513,6 +208,12 @@ public:
 
         tool2Layout->addWidget(computeCamberButton);
 
+        computeSuctionSideButton = new QPushButton(centralWidget);
+        computeSuctionSideButton->setObjectName(QStringLiteral("computeSuctionSideButton"));
+        computeSuctionSideButton->setEnabled(false);
+
+        tool2Layout->addWidget(computeSuctionSideButton);
+
 
         toolsLayout->addLayout(tool2Layout);
 
@@ -522,7 +223,9 @@ public:
         guiBladeDesignerClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(guiBladeDesignerClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1147, 21));
+        menuBar->setGeometry(QRect(0, 0, 1214, 21));
+        menuFile = new QMenu(menuBar);
+        menuFile->setObjectName(QStringLiteral("menuFile"));
         guiBladeDesignerClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(guiBladeDesignerClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -531,7 +234,22 @@ public:
         statusBar->setObjectName(QStringLiteral("statusBar"));
         guiBladeDesignerClass->setStatusBar(statusBar);
 
+        menuBar->addAction(menuFile->menuAction());
+        menuFile->addAction(actionRead);
+        menuFile->addAction(actionSave);
+        menuFile->addAction(actionExport_to_AutoCad);
+        menuFile->addSeparator();
+        menuFile->addAction(actionConfig);
+        menuFile->addAction(actionExit);
+        mainToolBar->addAction(actionRead);
+        mainToolBar->addAction(actionSave);
+        mainToolBar->addAction(actionExport_to_AutoCad);
+        mainToolBar->addAction(actionConfig);
+
         retranslateUi(guiBladeDesignerClass);
+
+        tab_panel->setCurrentIndex(0);
+
 
         QMetaObject::connectSlotsByName(guiBladeDesignerClass);
     } // setupUi
@@ -539,55 +257,58 @@ public:
     void retranslateUi(QMainWindow *guiBladeDesignerClass)
     {
         guiBladeDesignerClass->setWindowTitle(QApplication::translate("guiBladeDesignerClass", "guiBladeDesigner", nullptr));
-        label->setText(QApplication::translate("guiBladeDesignerClass", "xMax", nullptr));
-        xMaxEdit->setText(QApplication::translate("guiBladeDesignerClass", "0.25", nullptr));
-        xMaxComboBox->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        xMaxComboBox->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        xMaxComboBox->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_2->setText(QApplication::translate("guiBladeDesignerClass", "yMax", nullptr));
-        yMaxEdit->setText(QApplication::translate("guiBladeDesignerClass", "0.11", nullptr));
-        yMaxComboBox->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        yMaxComboBox->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        yMaxComboBox->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_4->setText(QApplication::translate("guiBladeDesignerClass", "alpha1", nullptr));
-        alpha1Edit->setText(QApplication::translate("guiBladeDesignerClass", "60", nullptr));
-        alpha1ComboBox->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        alpha1ComboBox->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        alpha1ComboBox->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_3->setText(QApplication::translate("guiBladeDesignerClass", "alpha2", nullptr));
-        alpha2Edit->setText(QApplication::translate("guiBladeDesignerClass", "21.5", nullptr));
-        comboBox->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        comboBox->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        comboBox->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_5->setText(QApplication::translate("guiBladeDesignerClass", "R1", nullptr));
-        inlet_radiusEdit->setText(QApplication::translate("guiBladeDesignerClass", "0.08", nullptr));
-        comboBox_2->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        comboBox_2->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        comboBox_2->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_6->setText(QApplication::translate("guiBladeDesignerClass", "R2", nullptr));
-        outlet_radiusEdit->setText(QApplication::translate("guiBladeDesignerClass", "0.02", nullptr));
-        comboBox_3->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        comboBox_3->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        comboBox_3->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_7->setText(QApplication::translate("guiBladeDesignerClass", "omega 1", nullptr));
-        inlet_omegaEdit->setText(QApplication::translate("guiBladeDesignerClass", "120", nullptr));
-        comboBox_4->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        comboBox_4->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        comboBox_4->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
-        label_8->setText(QApplication::translate("guiBladeDesignerClass", "omega 2", nullptr));
-        outlet_omegaEdit->setText(QApplication::translate("guiBladeDesignerClass", "90", nullptr));
-        comboBox_5->setItemText(0, QApplication::translate("guiBladeDesignerClass", "0.01", nullptr));
-        comboBox_5->setItemText(1, QApplication::translate("guiBladeDesignerClass", "0.001", nullptr));
-        comboBox_5->setItemText(2, QApplication::translate("guiBladeDesignerClass", "0.0001", nullptr));
-
+        actionRead->setText(QApplication::translate("guiBladeDesignerClass", "Read...", nullptr));
+#ifndef QT_NO_TOOLTIP
+        actionRead->setToolTip(QApplication::translate("guiBladeDesignerClass", "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Open and read parametrs from file</span></p></body></html>", nullptr));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        actionRead->setShortcut(QApplication::translate("guiBladeDesignerClass", "Ctrl+O", nullptr));
+#endif // QT_NO_SHORTCUT
+        actionSave->setText(QApplication::translate("guiBladeDesignerClass", "Save as...", nullptr));
+#ifndef QT_NO_TOOLTIP
+        actionSave->setToolTip(QApplication::translate("guiBladeDesignerClass", "Save as", nullptr));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        actionSave->setShortcut(QApplication::translate("guiBladeDesignerClass", "Ctrl+S", nullptr));
+#endif // QT_NO_SHORTCUT
+        actionExit->setText(QApplication::translate("guiBladeDesignerClass", "Exit", nullptr));
+        actionConfig->setText(QApplication::translate("guiBladeDesignerClass", "Config", nullptr));
+        actionExport_to_AutoCad->setText(QApplication::translate("guiBladeDesignerClass", "Export to AutoCad", nullptr));
+        QTableWidgetItem *___qtablewidgetitem = parametrsTable->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QApplication::translate("guiBladeDesignerClass", "value", nullptr));
+        QTableWidgetItem *___qtablewidgetitem1 = parametrsTable->horizontalHeaderItem(1);
+        ___qtablewidgetitem1->setText(QApplication::translate("guiBladeDesignerClass", "increment", nullptr));
+        QTableWidgetItem *___qtablewidgetitem2 = parametrsTable->verticalHeaderItem(0);
+        ___qtablewidgetitem2->setText(QApplication::translate("guiBladeDesignerClass", "xMax", nullptr));
+        QTableWidgetItem *___qtablewidgetitem3 = parametrsTable->verticalHeaderItem(1);
+        ___qtablewidgetitem3->setText(QApplication::translate("guiBladeDesignerClass", "yMax", nullptr));
+        QTableWidgetItem *___qtablewidgetitem4 = parametrsTable->verticalHeaderItem(2);
+        ___qtablewidgetitem4->setText(QApplication::translate("guiBladeDesignerClass", "alpha1", nullptr));
+        QTableWidgetItem *___qtablewidgetitem5 = parametrsTable->verticalHeaderItem(3);
+        ___qtablewidgetitem5->setText(QApplication::translate("guiBladeDesignerClass", "alpha2", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = parametrsTable->verticalHeaderItem(4);
+        ___qtablewidgetitem6->setText(QApplication::translate("guiBladeDesignerClass", "R1", nullptr));
+        QTableWidgetItem *___qtablewidgetitem7 = parametrsTable->verticalHeaderItem(5);
+        ___qtablewidgetitem7->setText(QApplication::translate("guiBladeDesignerClass", "R2", nullptr));
+        QTableWidgetItem *___qtablewidgetitem8 = parametrsTable->verticalHeaderItem(6);
+        ___qtablewidgetitem8->setText(QApplication::translate("guiBladeDesignerClass", "omega1", nullptr));
+        QTableWidgetItem *___qtablewidgetitem9 = parametrsTable->verticalHeaderItem(7);
+        ___qtablewidgetitem9->setText(QApplication::translate("guiBladeDesignerClass", "omega2", nullptr));
+        QTableWidgetItem *___qtablewidgetitem10 = parametrsTable->verticalHeaderItem(8);
+        ___qtablewidgetitem10->setText(QApplication::translate("guiBladeDesignerClass", "RMax", nullptr));
+        QTableWidgetItem *___qtablewidgetitem11 = parametrsTable->verticalHeaderItem(9);
+        ___qtablewidgetitem11->setText(QApplication::translate("guiBladeDesignerClass", "x RMax", nullptr));
+        QTableWidgetItem *___qtablewidgetitem12 = parametrsTable->verticalHeaderItem(10);
+        ___qtablewidgetitem12->setText(QApplication::translate("guiBladeDesignerClass", "RBend", nullptr));
+        QTableWidgetItem *___qtablewidgetitem13 = parametrsTable->verticalHeaderItem(11);
+        ___qtablewidgetitem13->setText(QApplication::translate("guiBladeDesignerClass", "x RBend", nullptr));
+        QTableWidgetItem *___qtablewidgetitem14 = parametrsTable->verticalHeaderItem(12);
+        ___qtablewidgetitem14->setText(QApplication::translate("guiBladeDesignerClass", "alphaBend", nullptr));
+        tab_panel->setTabText(tab_panel->indexOf(tab_parametrs), QApplication::translate("guiBladeDesignerClass", "Blade", nullptr));
+        tab_panel->setTabText(tab_panel->indexOf(tab_cascade), QApplication::translate("guiBladeDesignerClass", "Cascade", nullptr));
         computeCamberButton->setText(QApplication::translate("guiBladeDesignerClass", "compute Camberline ", nullptr));
+        computeSuctionSideButton->setText(QApplication::translate("guiBladeDesignerClass", "compute Suction Side", nullptr));
+        menuFile->setTitle(QApplication::translate("guiBladeDesignerClass", "File", nullptr));
     } // retranslateUi
 
 };
