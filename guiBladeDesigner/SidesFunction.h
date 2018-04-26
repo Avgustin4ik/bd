@@ -16,7 +16,7 @@ public:
 
 	SidesFunction();
 	SidesFunction(BezierCurve<T> &_curve);
-	SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions);
+	SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide);
 	SidesFunction(BezierCurve<T> &_curve, const vector<Vertex2D<T>> &_concidence_points, const vector<Vector2D<T>> &_tangent_vectors);
 	~SidesFunction();
 	void setConcidenceCondition(const vector<Vertex2D<T>> &_concidence_points);
@@ -30,7 +30,7 @@ public:
 	T operator () (vector<T> &variables);
 	T operator () (const TVector &x);
 	double value(const TVector &x);
-
+	bool isSuctionSide/* = true*/;
 protected:
 
 	vector<Vertex2D<T>> getPointsOnCurve();
@@ -61,8 +61,8 @@ inline SidesFunction<T>::SidesFunction(BezierCurve<T>& _curve) :curve(_curve)//Í
 }
 
 template<typename T>
-inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions)
-	: tVec(), p(), v(), curvature(), fishBones(), curve(_curve)
+inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide)
+	: tVec(), p(), v(), curvature(), fishBones(), curve(_curve), isSuctionSide(_isSuctionSide)
 {
 	v.clear();
 	v.reserve(_conditions.size()-2);
@@ -73,7 +73,7 @@ inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryCondition
 	{
 		p.emplace_back(_conditions(i).point);
 		v.emplace_back(_conditions(i).vector);
-		if ((i > 1) && (i < _conditions.size() - 1))	fishBones.emplace_back(FishBone<T>(curve.PPoints[i]));
+		if ((i > 1) && (i < _conditions.size() - 1))	fishBones.emplace_back(FishBone<T>(curve.PPoints[i], isSuctionSide));
 	}
 	tVec.clear(); tVec.reserve(p.size());
 	for (auto &i : p)
@@ -231,7 +231,7 @@ inline void SidesFunction<T>::recompute_fishBones()
 	fishBones.clear();	fishBones.reserve(cP.size() - 4);
 	for (size_t i = 2; i < cP.size() - 2; i++)
 	{
-		fishBones.emplace_back(FishBone<T>(cP[i]));
+		fishBones.emplace_back(FishBone<T>(cP[i], isSuctionSide));
 	}
 }
 
@@ -272,3 +272,4 @@ template<typename T>
 SidesFunction<T>::~SidesFunction()
 {
 }
+

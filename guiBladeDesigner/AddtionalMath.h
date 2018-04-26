@@ -95,6 +95,7 @@ void method_bisection(F& f, std::vector<T> &variables, const T left_border, cons
 	T a = left_border;
 	T b = right_border;
 	x = (a + b) / 2;
+
 	vector<T> new_variables;
 	new_variables.push_back(x);
 	T& xn = new_variables[0];

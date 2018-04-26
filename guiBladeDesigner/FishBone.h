@@ -10,7 +10,7 @@ public:
 	static BezierCurve<T> skeleton;
 	FishBone();
 	FishBone(const float64 &tSk, const T &variable);
-	FishBone(const Vertex2D<T> &endPoint);
+	FishBone(const Vertex2D<T> &endPoint, bool _isSuctionSide);
 	~FishBone();
 
 	const BezierCurve<T>& getSkeleton();
@@ -21,7 +21,7 @@ public:
 	void recompute(Vertex2D<T> &p, T &gamma);
 	const T getValue();
 
-	static bool isSuctionSide;
+	bool isSuctionSide = true;
 protected:
 	Vertex2D<T> skeletonPoint, endPoint;
 	Vector2D<T> bone;
@@ -40,8 +40,8 @@ inline FishBone<T>::FishBone(const float64 &tSk, const T &variable)
 	endPoints = skeletonPoint + bone * powf(var, 2);
 }
 template<typename T>
-inline FishBone<T>::FishBone(const Vertex2D<T> &_endPoint)
-	:endPoint(_endPoint)/*, isSuctionSide(true)*/
+inline FishBone<T>::FishBone(const Vertex2D<T> &_endPoint, bool _isSuctionSide)
+	:isSuctionSide(_isSuctionSide),endPoint(_endPoint)/*, isSuctionSide(true)*/
 {
 	//if (endPoint.y < skeleton.PPoints[3].y)	isSuctionSide = false;
 	auto t = skeleton.find_nearest(endPoint);

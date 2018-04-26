@@ -135,6 +135,8 @@ public:
 		vector<T> variables;
 		T t = 0.5;
 		variables.push_back(t);
+		//std::thread thread(method_bisection<function_bezier2point<T>,T>, f, std::ref(variables), LEFT_BORDER, RIGHT_BORDER);
+		//thread.join();
 		method_bisection(f, variables, LEFT_BORDER, RIGHT_BORDER);
 		t = variables.at(0);
 		return (t);

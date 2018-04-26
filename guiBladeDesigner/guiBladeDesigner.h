@@ -7,13 +7,15 @@
 #include <QtCore>
 #include <UserSpinBox.h>
 #include <CamberCircle.h>
-
+#include <thread>
 
 class guiBladeDesigner : public QMainWindow
 {
 	Q_OBJECT
 public:
 	guiBladeDesigner(QWidget *parent = Q_NULLPTR);
+
+	
 private slots:
 //POEHALI
 	void plotCurve(BezierCurve<float32> &curve);
@@ -39,13 +41,18 @@ private slots:
 	void saveFile();
 	void export2AutoCad();
 	void readingProtocol(QStringList &str);
-	
 	//void savingProtocol();
+
+public:
+	template<typename T>
+	void minimization(SidesFunction<T> &f, VectorXd &xd);
 private:
 	//poiters magic
 	QList<QPointer<UserSpinBox>> listSpinBoxes();
 	QList<QPointer<QComboBox>> listComboBoxes();
 	void tableConfig(QTableWidget *table , QList<QPointer<UserSpinBox>> listSP, QList<QPointer<QComboBox>> listCB);
+
+	
 private:
 	QList <QPointer<QComboBox>> listCMB;
 	QList<QPointer<UserSpinBox>> listUSBox;
@@ -104,3 +111,5 @@ private:
 	Flags flags;
 	
 };
+
+

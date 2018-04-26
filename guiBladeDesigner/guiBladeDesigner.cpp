@@ -1,7 +1,6 @@
 #include "guiBladeDesigner.h"
 
 BezierCurve<float32> FishBone<float32>::skeleton;
-bool FishBone<float32>::isSuctionSide;
 guiBladeDesigner::guiBladeDesigner(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -278,94 +277,53 @@ void guiBladeDesigner::camberButtonClicked()
 
 }
 
+template<typename T>
+void guiBladeDesigner::minimization(SidesFunction<T>& f, VectorXd & xd)
+{
+	BfgsSolver<SidesFunction<T>> solver;
+	while (f.value(xd) > 1e-2)
+	{
+		solver.minimize(f, xd);
+		vector<T> xv(xd.size(), -100);
+		for (int i = 0; i < xv.size(); i++) xv[i] = xd[i];
+		f.setVariables(xv);
+		if (f.getCurve().m > 12) break;
+		else if (f.value(xd)>1e-2)
+		{
+			f.setVariables(xv);
+			f.increaseCurve(xv);
+			xd.resize(xv.size());
+			for (int i = 0; i < xv.size(); i++) xd[i] = xv[i];
+		}
+	}
+}
 void guiBladeDesigner::suctionSideButtonClicked()
 {
+	int startTime = clock();
 	FishBone<float32>::skeleton = camberCurve;
-	FishBone<float32>::isSuctionSide = true;
-	SidesFunction<float32> f(suctionSide, suctionSideBC);
+	SidesFunction<float32> f(suctionSide, suctionSideBC, true);
+	f.isSuctionSide = true;
 	BfgsSolver<SidesFunction<float32>> solver;
 	int size = suctionSide.PPoints.size() - 2;
 	VectorXd x(size);
 	for (size_t i = 0; i < size; i++) x[i] = 0.2;
 	VectorXd xInit(x);
-	suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
-	suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
-	while (f.value(x) > 1e-2)
-	{
-		solver.minimize(f, x);
-		vector<float32> vvx(x.size(), -100);
-		for (size_t i = 0; i < x.size(); i++)	vvx[i] = x[i];
-		f.setVariables(vvx);
-		suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
-		suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
-		ui.globalPlot->replot();
-		
-		ui.statusBar->showMessage("suctionSide	f(x)=" + QString::number(f.value(x)), 2000);
-		if (f.value(x) > 1e-2)
-		{
-			//x = xInit;
-			vector<float32> vx(x.size(),-100);
-			for (size_t i = 0; i < x.size(); i++)	vx[i] = x[i];
-			f.increaseCurve(vx);
-			x.resize(vx.size());
-			for (size_t i = 0; i < x.size(); i++)	x[i] = vx[i];
-			//xInit = x;
-			suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
-			suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
-		}
-		else break;
-		if (suctionSide.m > 12)	break;
-	}
-	suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
-	suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
-	ui.globalPlot->replot();
-	//plotCurve(suctionSide);
-	plotCurvature(suctionSide);
-	SidesFunction<float32> fps(pressureSide, pressureSideBC);
-	BfgsSolver<SidesFunction<float32>> ps_solver;
+	SidesFunction<float32> fps(pressureSide, pressureSideBC, false);
+	fps.isSuctionSide = false;
 	size = pressureSide.PPoints.size() - 2;
-	FishBone<float32>::isSuctionSide = false;
-	Criteria<double> stopCriteria;
-	stopCriteria.iterations = 200;
-	stopCriteria.xDelta = 1e-3;
-	stopCriteria.fDelta = 1e-3;
-	ps_solver.setStopCriteria(stopCriteria);
 	VectorXd xp(size);
-	vector<float32> vx(size, -100);
 	for (size_t i = 0; i < size; i++) xp[i] = 0.2;
-	for (size_t i = 0; i < size; i++) vx[i] = xp[i];
-	fps.setVariables(vx);
+	std::thread one([this, &f, &x]() {minimization<float32>(f, x); });
+	minimization<float32>(fps, xp);
+	one.join();
 	pressureBZ->setData(getBX(pressureSide), getBY(pressureSide));
 	pressurePP->setData(getPX(pressureSide), getPY(pressureSide));
-	ui.globalPlot->replot();
-	xInit = xp;
-	while (fps.value(xp) > 1e-2)
-	{
-		ps_solver.minimize(fps, xp);
-		for (size_t i = 0; i < size; i++) vx[i] = xp[i];
-		fps.setVariables(vx);
-		pressureBZ->setData(getBX(pressureSide), getBY(pressureSide));
-		pressurePP->setData(getPX(pressureSide), getPY(pressureSide));
-		ui.globalPlot->replot();
-		ui.statusBar->showMessage("pressureSide	f(x)=" + QString::number(fps.value(xp)), 2000);
-		if (fps.value(xp) > 1e-2)
-		{
-			fps.setVariables(vx);
-			fps.increaseCurve(vx);
-			xp.resize(vx.size());
-			for (size_t i = 0; i < xp.size(); i++)	xp[i] = vx[i];
-			pressureBZ->setData(getBX(pressureSide), getBY(pressureSide));
-			pressurePP->setData(getPX(pressureSide), getPY(pressureSide));
-			ui.globalPlot->replot();
-		}
-		else break;
-		if (pressureSide.m > 15)	break;
-		for (auto &i : vx) if (i > 1)	break;
-	}
-	pressureBZ->setData(getBX(pressureSide), getBY(pressureSide));
-	pressurePP->setData(getPX(pressureSide), getPY(pressureSide));
+	suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
+	suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
 	ui.globalPlot->replot();
 	plotCurvature(pressureSide);
+	int endTime = clock();
+	ui.statusBar->showMessage("Time for minimization" + QString::number(endTime - startTime), 5000);
 }
 
 void guiBladeDesigner::read_xMax()
@@ -730,4 +688,3 @@ QVector<double> guiBladeDesigner::getBY(BezierCurve<float32>& curve)
 		y << curve.getPoint(t).y;
 	return y;
 }
-
