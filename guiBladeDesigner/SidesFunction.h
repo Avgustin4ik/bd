@@ -16,21 +16,22 @@ public:
 
 	SidesFunction();
 	SidesFunction(BezierCurve<T> &_curve);
-	SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide);
-	SidesFunction(BezierCurve<T> &_curve, const vector<Vertex2D<T>> &_concidence_points, const vector<Vector2D<T>> &_tangent_vectors);
+	SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide, const T &_inlet_radius, const T &_outlet_radius);
+	SidesFunction(BezierCurve<T> &_curve, const vector<Vertex2D<T>> &_concidence_points, const vector<Vector2D<T>> &_tangent_vectors, const T &_inlet_radius, const T &_outlet_radius);
 	~SidesFunction();
 	void setConcidenceCondition(const vector<Vertex2D<T>> &_concidence_points);
 	void setTangentCondition(const vector<Vector2D<T>> &_tangent_vectors);
 	void increaseCurve(vector<T> &variables);
 	void getVariables(vector<T> &variables);
 	void setVariables(vector<T> &variables);
+	void setEdgesRadius(const T &inletR, const T &outletR);
 	BezierCurve<T>& getCurve();
 	vector<Vertex2D<T>>& getConditionPoints();
 	vector<FishBone<T>>& getFishBones();
 	T operator () (vector<T> &variables);
 	T operator () (const TVector &x);
 	double value(const TVector &x);
-	bool isSuctionSide/* = true*/;
+	bool isSuctionSide;
 protected:
 
 	vector<Vertex2D<T>> getPointsOnCurve();
@@ -40,6 +41,7 @@ protected:
 	T coincidenceCondition();
 	T tangentCondition();
 	T curvatureCondition();
+	T inlet_radius, outlet_radius;
 	vector<T> tVec;					//Значение t для каждой точки, ближайшей к целевой
 	vector<Vertex2D<T>> p;						//Целевые точки
 	vector<Vertex2D<T>> pp;						//parametric points
@@ -47,7 +49,6 @@ protected:
 	vector<FishBone<T>> fishBones;
 	vector<T> curvature;
 	BezierCurve<T>& curve;
-	//const BezierCurve<T> &camberLine;
 	
 };
 template<typename T>
@@ -61,9 +62,11 @@ inline SidesFunction<T>::SidesFunction(BezierCurve<T>& _curve) :curve(_curve)//Н
 }
 
 template<typename T>
-inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide)
+inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryConditions<T> &_conditions, const bool _isSuctionSide, const T &_inlet_radius, const T &_outlet_radius)
 	: tVec(), p(), v(), curvature(), fishBones(), curve(_curve), isSuctionSide(_isSuctionSide)
 {
+	inlet_radius = _inlet_radius;
+	outlet_radius = _outlet_radius;
 	v.clear();
 	v.reserve(_conditions.size()-2);
 	p.reserve(_conditions.size()-2);
@@ -81,7 +84,7 @@ inline SidesFunction<T>::SidesFunction(BezierCurve<T> &_curve, BoundaryCondition
 }
 
 template<typename T>
-inline SidesFunction<T>::SidesFunction(BezierCurve<T>& _curve, const vector<Vertex2D<T>>& _concidence_points, const vector<Vector2D<T>>& _tangent_vectors)
+inline SidesFunction<T>::SidesFunction(BezierCurve<T>& _curve, const vector<Vertex2D<T>>& _concidence_points, const vector<Vector2D<T>>& _tangent_vectors, const T &_inlet_radius, const T &_outlet_radius)
 {
 }
 
@@ -116,8 +119,7 @@ inline void SidesFunction<T>::increaseCurve(vector<T>& variables)
 template<typename T>
 inline T SidesFunction<T>::operator()(vector<T>& variables)
 {
-	//setVariables(variables);
-	return coincidenceCondition() + tangentCondition()/* + curvatureCondition()*/;
+	return coincidenceCondition() + tangentCondition() + curvatureCondition();
 }
 template<typename T>
 inline T SidesFunction<T>::operator() (const TVector &x)
@@ -194,7 +196,14 @@ inline void SidesFunction<T>::setVariables(vector<T>& variables)
 	for (size_t i = 2; i < cP.size() - 2; i++)
 	{
 		cP[i] = fishBones[i - 2].getPoint(variables[i]);
-	} 
+	}
+}
+
+template<typename T>
+inline void SidesFunction<T>::setEdgesRadius(const T & inletR, const T & outletR)
+{
+	inlet_radius = inletR;
+	outlet_radius = outletR;
 }
 
 template<typename T>
@@ -252,7 +261,23 @@ inline T SidesFunction<T>::coincidenceCondition()
 template<typename T>
 inline T SidesFunction<T>::curvatureCondition()
 {
-	return 0.0;
+	T c_begin = powf(curve.curvature(0.0) - (inlet_radius), 2);
+	T c_end = powf(curve.curvature(1.0) - (outlet_radius), 2);
+	int curvature_size = 8;
+	curvature.resize(curvature_size,100);
+	double t = 0.0;
+	double step = 0.1;
+	double sum = 0.0;
+	double eps = 0.0;
+	for (auto &i : curvature)
+	{
+		t = t + step;
+		i = curve.curvature(t + step);
+		if (i > eps)
+			sum = sum + pow(i, 2);
+
+	}
+	return c_begin + c_end + sum;
 }
 template<typename T>
 inline T SidesFunction<T>::tangentCondition()

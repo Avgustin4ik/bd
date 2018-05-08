@@ -7,7 +7,7 @@
 #include <QtCore>
 #include <UserSpinBox.h>
 #include <CamberCircle.h>
-#include <thread>
+#include <BZCurve.h>
 
 class guiBladeDesigner : public QMainWindow
 {
@@ -93,6 +93,10 @@ private:
 	QCPCurve *suctionBZ;
 	QCPCurve *pressurePP;
 	QCPCurve *pressureBZ;
+	BZCurve<float32> *line_camber;
+	BZCurve<float32> *line_suction;
+	BZCurve<float32> *line_pressure;
+	
 	//blade parametrs
 	float32 &inlet_radius = inletEdge.radius;
 	float32 inlet_omega;

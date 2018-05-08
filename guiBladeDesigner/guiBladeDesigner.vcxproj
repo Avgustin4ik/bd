@@ -146,6 +146,7 @@
     <ClInclude Include="Setups.h" />
     <ClInclude Include="SidesFunction.h" />
     <QtMoc Include="UserSpinBox.h" />
+    <ClInclude Include="SketchCurve.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vertex2D.h" />
     <QtMoc Include="qcustomplot.h" />

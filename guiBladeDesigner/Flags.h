@@ -2,7 +2,6 @@
 struct Flags
 {
 	bool isCLineCompute = false;
-	bool isSSideCompute = false;
-	bool isPSideCompute = false;
+	bool isWallsCompute = false;
 	bool isNeedRecompute = true;
 };

@@ -39,6 +39,7 @@ guiBladeDesigner::guiBladeDesigner(QWidget *parent)
 	pressureBZ = new QCPCurve(ui.globalPlot->xAxis, ui.globalPlot->yAxis);
 	pressurePP = new QCPCurve(ui.globalPlot->xAxis, ui.globalPlot->yAxis);
 	pressurePP->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, Qt::red, Qt::white, 12));
+	
 	//Pen settings
 	ppPen.setColor(Qt::red);	ppPen.setWidth(4);	ppPen.setStyle(Qt::DashLine);
 	bzPen.setColor(Qt::blue);	bzPen.setWidth(4);	bzPen.setStyle(Qt::SolidLine);
@@ -183,7 +184,6 @@ void guiBladeDesigner::camberButtonClicked()
 	CamberLineFunction<float32> fCamber(camberCurve, lineCurve, xMax);
 	BfgsSolver<CamberLineFunction<float32>> solver;
 	VectorXd x(2); x << 0.3, 0.3;
-	VectorXd xInit(x);
 	while (fCamber.value(x) > 1e-4)
 	{
 		solver.minimize(fCamber, x);
@@ -192,9 +192,7 @@ void guiBladeDesigner::camberButtonClicked()
 		fCamber.recompute(vx);
 		if (fCamber.value(x) > 1e-3)
 		{
-			//x = xInit;
 			fCamber.add_PPoint(x);
-			//xInit = x;	
 		}
 		else break;
 		if (camberCurve.m > 10) break;
@@ -215,10 +213,7 @@ void guiBladeDesigner::camberButtonClicked()
 	ui.globalPlot->replot();
 	plotCurvature(camberCurve);
 	flags.isCLineCompute = true;
-	read_xMax();
-	read_edge();
-	read_maxCircle();
-	read_bendCircle();
+	readAll();
 	ui.statusBar->showMessage("Camber Line is compute!	f(x)=" + QString::number(fCamber.value(x)),5000);
 	suctionSideBC = getBoundaryConditions(true);
 	pressureSideBC = getBoundaryConditions(false);
@@ -274,7 +269,6 @@ void guiBladeDesigner::camberButtonClicked()
 		pressurePP->addData(getPX(pressureSide), getPY(pressureSide));
 	}
 	ui.globalPlot->replot();
-
 }
 
 template<typename T>
@@ -301,14 +295,14 @@ void guiBladeDesigner::suctionSideButtonClicked()
 {
 	int startTime = clock();
 	FishBone<float32>::skeleton = camberCurve;
-	SidesFunction<float32> f(suctionSide, suctionSideBC, true);
+	SidesFunction<float32> f(suctionSide, suctionSideBC, true, inlet_radius, outlet_radius);
 	f.isSuctionSide = true;
 	BfgsSolver<SidesFunction<float32>> solver;
 	int size = suctionSide.PPoints.size() - 2;
 	VectorXd x(size);
 	for (size_t i = 0; i < size; i++) x[i] = 0.2;
-	VectorXd xInit(x);
-	SidesFunction<float32> fps(pressureSide, pressureSideBC, false);
+	//minimization(f, x);
+	SidesFunction<float32> fps(pressureSide, pressureSideBC, false, inlet_radius, outlet_radius);
 	fps.isSuctionSide = false;
 	size = pressureSide.PPoints.size() - 2;
 	VectorXd xp(size);
@@ -324,6 +318,7 @@ void guiBladeDesigner::suctionSideButtonClicked()
 	plotCurvature(pressureSide);
 	int endTime = clock();
 	ui.statusBar->showMessage("Time for minimization" + QString::number(endTime - startTime), 5000);
+	flags.isWallsCompute = true;
 }
 
 void guiBladeDesigner::read_xMax()
@@ -341,9 +336,6 @@ void guiBladeDesigner::read_camberAngles()
 	using P = Vertex2D<float32>;
 	if (flags.isCLineCompute == true)
 	{
-		/*float32 l1 = camberCurve.PPoints[0].length(camberCurve.PPoints[1]);
-		int ppSize = camberCurve.PPoints.size();
-		float32 l2 = camberCurve.PPoints[ppSize - 1].length(camberCurve.PPoints[ppSize - 2]);*/
 
 	}
 	else
@@ -603,6 +595,7 @@ void guiBladeDesigner::readingProtocol(QStringList & str)
 	readAll();
 }
 
+
 QList<QPointer<UserSpinBox>> guiBladeDesigner::listSpinBoxes()
 {
 	QList<QPointer<UserSpinBox>> list;
@@ -676,15 +669,15 @@ QVector<double> guiBladeDesigner::getPY(BezierCurve<float32>& curve)
 QVector<double> guiBladeDesigner::getBX(BezierCurve<float32>& curve)
 {
 	QVector<double> x;
-	for (double t = 0.0; t <= 1.0; t = t + 0.01)
-		x << curve.getPoint(t).x;
+	for (int i = 0; i <= 100; i = i + 1)
+		x << curve.getPoint(double(i/100.0)).x;
 	return x;
 }
 
 QVector<double> guiBladeDesigner::getBY(BezierCurve<float32>& curve)
 {
 	QVector<double> y;
-	for (double t = 0.0; t <= 1.0; t = t + 0.01)
-		y << curve.getPoint(t).y;
+	for (int i = 0; i <= 100; i = i + 1)
+		y << curve.getPoint(double(i / 100.0)).y;
 	return y;
 }

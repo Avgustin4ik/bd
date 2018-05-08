@@ -116,6 +116,9 @@
     <ClInclude Include="CamberCircle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SketchCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Icons\if_download_216183.png">

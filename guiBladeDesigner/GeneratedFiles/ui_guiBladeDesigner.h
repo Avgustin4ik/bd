@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
@@ -41,16 +42,19 @@ public:
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *plotLayout;
+    QFrame *line_2;
     QCustomPlot *globalPlot;
+    QFrame *line;
     QCustomPlot *additionalPlot;
+    QFrame *line_3;
     QVBoxLayout *toolsLayout;
     QTabWidget *tab_panel;
     QWidget *tab_parametrs;
     QHBoxLayout *horizontalLayout_9;
     QTableWidget *parametrsTable;
     QWidget *tab_cascade;
-    QVBoxLayout *tool2Layout;
     QSpacerItem *verticalSpacer;
+    QHBoxLayout *horizontalLayout_2;
     QPushButton *computeCamberButton;
     QPushButton *computeSuctionSideButton;
     QMenuBar *menuBar;
@@ -99,29 +103,65 @@ public:
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         plotLayout = new QVBoxLayout();
-        plotLayout->setSpacing(20);
+        plotLayout->setSpacing(10);
         plotLayout->setObjectName(QStringLiteral("plotLayout"));
-        plotLayout->setContentsMargins(20, 20, 20, -1);
+        plotLayout->setContentsMargins(5, 5, 5, -1);
+        line_2 = new QFrame(centralWidget);
+        line_2->setObjectName(QStringLiteral("line_2"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(line_2->sizePolicy().hasHeightForWidth());
+        line_2->setSizePolicy(sizePolicy1);
+        line_2->setMinimumSize(QSize(0, 2));
+        line_2->setMaximumSize(QSize(16777215, 5));
+        line_2->setFrameShape(QFrame::HLine);
+        line_2->setFrameShadow(QFrame::Sunken);
+
+        plotLayout->addWidget(line_2);
+
         globalPlot = new QCustomPlot(centralWidget);
         globalPlot->setObjectName(QStringLiteral("globalPlot"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(15);
-        sizePolicy1.setHeightForWidth(globalPlot->sizePolicy().hasHeightForWidth());
-        globalPlot->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(15);
+        sizePolicy2.setHeightForWidth(globalPlot->sizePolicy().hasHeightForWidth());
+        globalPlot->setSizePolicy(sizePolicy2);
         globalPlot->setBaseSize(QSize(0, 0));
 
         plotLayout->addWidget(globalPlot);
 
+        line = new QFrame(centralWidget);
+        line->setObjectName(QStringLiteral("line"));
+        sizePolicy1.setHeightForWidth(line->sizePolicy().hasHeightForWidth());
+        line->setSizePolicy(sizePolicy1);
+        line->setMinimumSize(QSize(0, 2));
+        line->setMaximumSize(QSize(16777215, 5));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        plotLayout->addWidget(line);
+
         additionalPlot = new QCustomPlot(centralWidget);
         additionalPlot->setObjectName(QStringLiteral("additionalPlot"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(6);
-        sizePolicy2.setHeightForWidth(additionalPlot->sizePolicy().hasHeightForWidth());
-        additionalPlot->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(6);
+        sizePolicy3.setHeightForWidth(additionalPlot->sizePolicy().hasHeightForWidth());
+        additionalPlot->setSizePolicy(sizePolicy3);
 
         plotLayout->addWidget(additionalPlot);
+
+        line_3 = new QFrame(centralWidget);
+        line_3->setObjectName(QStringLiteral("line_3"));
+        sizePolicy1.setHeightForWidth(line_3->sizePolicy().hasHeightForWidth());
+        line_3->setSizePolicy(sizePolicy1);
+        line_3->setMinimumSize(QSize(0, 2));
+        line_3->setMaximumSize(QSize(16777215, 5));
+        line_3->setFrameShape(QFrame::HLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+
+        plotLayout->addWidget(line_3);
 
 
         horizontalLayout->addLayout(plotLayout);
@@ -129,15 +169,13 @@ public:
         toolsLayout = new QVBoxLayout();
         toolsLayout->setSpacing(10);
         toolsLayout->setObjectName(QStringLiteral("toolsLayout"));
-        toolsLayout->setContentsMargins(20, 20, 20, 20);
+        toolsLayout->setContentsMargins(20, 5, 20, 50);
         tab_panel = new QTabWidget(centralWidget);
         tab_panel->setObjectName(QStringLiteral("tab_panel"));
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(tab_panel->sizePolicy().hasHeightForWidth());
-        tab_panel->setSizePolicy(sizePolicy3);
-        tab_panel->setMinimumSize(QSize(0, 0));
+        sizePolicy1.setHeightForWidth(tab_panel->sizePolicy().hasHeightForWidth());
+        tab_panel->setSizePolicy(sizePolicy1);
+        tab_panel->setMinimumSize(QSize(0, 480));
+        tab_panel->setMaximumSize(QSize(16777215, 480));
         tab_parametrs = new QWidget();
         tab_parametrs->setObjectName(QStringLiteral("tab_parametrs"));
         horizontalLayout_9 = new QHBoxLayout(tab_parametrs);
@@ -180,7 +218,13 @@ public:
         QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
         parametrsTable->setVerticalHeaderItem(12, __qtablewidgetitem14);
         parametrsTable->setObjectName(QStringLiteral("parametrsTable"));
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(parametrsTable->sizePolicy().hasHeightForWidth());
+        parametrsTable->setSizePolicy(sizePolicy4);
         parametrsTable->setMinimumSize(QSize(270, 0));
+        parametrsTable->setMaximumSize(QSize(16777215, 480));
         parametrsTable->setShowGrid(true);
         parametrsTable->setGridStyle(Qt::SolidLine);
         parametrsTable->setWordWrap(true);
@@ -195,27 +239,26 @@ public:
 
         toolsLayout->addWidget(tab_panel);
 
-        tool2Layout = new QVBoxLayout();
-        tool2Layout->setSpacing(6);
-        tool2Layout->setObjectName(QStringLiteral("tool2Layout"));
-        tool2Layout->setContentsMargins(20, 20, 20, 20);
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Minimum);
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Maximum);
 
-        tool2Layout->addItem(verticalSpacer);
+        toolsLayout->addItem(verticalSpacer);
 
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         computeCamberButton = new QPushButton(centralWidget);
         computeCamberButton->setObjectName(QStringLiteral("computeCamberButton"));
 
-        tool2Layout->addWidget(computeCamberButton);
+        horizontalLayout_2->addWidget(computeCamberButton);
 
         computeSuctionSideButton = new QPushButton(centralWidget);
         computeSuctionSideButton->setObjectName(QStringLiteral("computeSuctionSideButton"));
         computeSuctionSideButton->setEnabled(false);
 
-        tool2Layout->addWidget(computeSuctionSideButton);
+        horizontalLayout_2->addWidget(computeSuctionSideButton);
 
 
-        toolsLayout->addLayout(tool2Layout);
+        toolsLayout->addLayout(horizontalLayout_2);
 
 
         horizontalLayout->addLayout(toolsLayout);
