@@ -131,15 +131,17 @@ inline T SidesFunction<T>::operator() (const TVector &x)
 template<typename T>
 inline double SidesFunction<T>::value(const TVector & x)
 {
-	pp = curve.PPoints;
 	vector<T> variables;
+	auto i = x.size();
 	variables.reserve(x.size());
 	for (size_t i = 0; i < x.size(); i++)
 	{
 		variables.emplace_back(x[i]);
 	}
+	pp = curve.PPoints;
+	
 	setVariables(variables);
-	T res = coincidenceCondition() + tangentCondition() + curvatureCondition();
+	T res = coincidenceCondition() + tangentCondition()  + curvatureCondition();
 	curve.setPPoints(pp);
 	pp.clear();
 	return res;
@@ -261,23 +263,26 @@ inline T SidesFunction<T>::coincidenceCondition()
 template<typename T>
 inline T SidesFunction<T>::curvatureCondition()
 {
-	T c_begin = powf(curve.curvature(0.0) - (inlet_radius), 2);
-	T c_end = powf(curve.curvature(1.0) - (outlet_radius), 2);
-	int curvature_size = 8;
-	curvature.resize(curvature_size,100);
+	double k = -1.0;
+	/*if (!isSuctionSide)
+		k = 1.0;*/
+	T c_begin = (curve.curvature(0.0) - k / inlet_radius, 2);
+	T c_end = (curve.curvature(1.0) + 1.0 / outlet_radius, 2);
+	/*int curvature_size = 18;
+	curvature.resize(curvature_size);
 	double t = 0.0;
-	double step = 0.1;
+	double step = 1.0 / double(curvature_size + 2.0);
 	double sum = 0.0;
-	double eps = 0.0;
+	double eps = 0.5;
 	for (auto &i : curvature)
 	{
 		t = t + step;
 		i = curve.curvature(t + step);
 		if (i > eps)
 			sum = sum + pow(i, 2);
-
-	}
-	return c_begin + c_end + sum;
+	}*/
+	return c_begin + c_end/* + sum*/;
+	//return 0.0;
 }
 template<typename T>
 inline T SidesFunction<T>::tangentCondition()

@@ -156,7 +156,7 @@ public:
 	}
 	const T curvature(const T t)
 	{
-		auto ans = (dt(t).x*ddt(t).y - dt(t).y*ddt(t).x) / powf((powf(dt(t).x, float(2)) + powf(dt(t).y, float(2))), float(3) / float(2));
+		auto ans = (dt(t).x*ddt(t).y - dt(t).y*ddt(t).x) / powf((powf(dt(t).x, 2) + powf(dt(t).y, 2)), 3.0 / 2.0);
 		return ans;
 	}
 	BezierCurve<T> shift_curve(const bool isSuctionSide, const Vertex2D<T> _p0, const Vertex2D<T> _pn,

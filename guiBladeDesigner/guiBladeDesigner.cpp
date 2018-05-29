@@ -40,6 +40,12 @@ guiBladeDesigner::guiBladeDesigner(QWidget *parent)
 	pressurePP = new QCPCurve(ui.globalPlot->xAxis, ui.globalPlot->yAxis);
 	pressurePP->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, Qt::red, Qt::white, 12));
 	
+	curvature_camber = new QCPCurve(ui.additionalPlot->xAxis, ui.additionalPlot->yAxis);
+	curvature_suction = new QCPCurve(ui.additionalPlot->xAxis, ui.additionalPlot->yAxis);
+	curvature_pressure = new QCPCurve(ui.additionalPlot->xAxis, ui.additionalPlot->yAxis);
+	curvature_camber->setPen(QPen(Qt::blue, 2, Qt::DashLine));
+	curvature_suction->setPen(QPen(Qt::red, 4, Qt::SolidLine));
+	curvature_pressure->setPen(QPen(Qt::green, 4, Qt::SolidLine));
 	//Pen settings
 	ppPen.setColor(Qt::red);	ppPen.setWidth(4);	ppPen.setStyle(Qt::DashLine);
 	bzPen.setColor(Qt::blue);	bzPen.setWidth(4);	bzPen.setStyle(Qt::SolidLine);
@@ -79,17 +85,21 @@ void guiBladeDesigner::plotCurve(BezierCurve<float32> &curve)
 	ui.globalPlot->replot();
 }
 
-void guiBladeDesigner::plotCurvature(BezierCurve<float32>& curve)
+void guiBladeDesigner::plotCurvature()
 {
-	int i = ui.additionalPlot->graphCount();
-	QVector<double> x, y;
-	for (double t = 0.0; t <= 1.0; t = t + 0.01)
+	
+	QVector<double> x, yC, yS, yP;
+	for (int i = 0; i<=100; i++)
 	{
+		double t = double(i) / 100.0;
 		x << t;
-		y << curve.curvature(t);
+		yC << camberCurve.curvature(t);
+		yS << suctionSide.curvature(t);
+		yP << pressureSide.curvature(t);
 	}
-	ui.additionalPlot->addGraph();
-	ui.additionalPlot->graph(i)->addData(x, y);
+	curvature_camber->setData(x, yC);
+	curvature_suction->setData(x, yS);
+	curvature_pressure->setData(x, yP);
 	ui.additionalPlot->yAxis->rescale(true);
 	ui.additionalPlot->replot();
 }
@@ -184,7 +194,7 @@ void guiBladeDesigner::camberButtonClicked()
 	CamberLineFunction<float32> fCamber(camberCurve, lineCurve, xMax);
 	BfgsSolver<CamberLineFunction<float32>> solver;
 	VectorXd x(2); x << 0.3, 0.3;
-	while (fCamber.value(x) > 1e-4)
+	while (fCamber.value(x) > 1e-3)
 	{
 		solver.minimize(fCamber, x);
 		vector<float32> vx;
@@ -211,7 +221,7 @@ void guiBladeDesigner::camberButtonClicked()
 		camberPP->setData(getPX(camberCurve), getPY(camberCurve));
 	}
 	ui.globalPlot->replot();
-	plotCurvature(camberCurve);
+	plotCurvature();
 	flags.isCLineCompute = true;
 	readAll();
 	ui.statusBar->showMessage("Camber Line is compute!	f(x)=" + QString::number(fCamber.value(x)),5000);
@@ -275,14 +285,39 @@ template<typename T>
 void guiBladeDesigner::minimization(SidesFunction<T>& f, VectorXd & xd)
 {
 	BfgsSolver<SidesFunction<T>> solver;
-	while (f.value(xd) > 1e-2)
-	{
+	T deps = 1e-2;
+	T m_max = 12;
+	while (f.value(xd) > deps)
+	{	
 		solver.minimize(f, xd);
 		vector<T> xv(xd.size(), -100);
 		for (int i = 0; i < xv.size(); i++) xv[i] = xd[i];
 		f.setVariables(xv);
-		if (f.getCurve().m > 12) break;
-		else if (f.value(xd)>1e-2)
+		/*
+		**Добавил условие удаленности для двух первых и последних точек
+		*/
+		//vector<Vertex2D<T>> &pp = f.getCurve().PPoints;
+		//vector<FishBone<T>> fbones = f.getFishBones();
+		//bool isFBlower = false;
+		//BezierCurve<T> &curve = f.getCurve();
+		//for (size_t i = 1; i < fbones.size(); i++)
+		//{
+		//	Vertex2D<T> first = curve.PPoints[i];
+		//	Vertex2D<T> second = curve.getPoint(curve.find_nearest(curve.PPoints[i]));
+		//	if (f.isSuctionSide)
+		//	{
+		//		if (first.y - second.y <= 0.0)
+		//			//if (fbones.at(i).getPoint().y <= f.getCurve().getPoint(f.getCurve().find_nearest(f.getCurve().PPoints[i])).y)
+		//		{
+		//			isFBlower = true;
+		//			f.increaseCurve(xv);
+		//			xd.resize(xv.size());
+		//			for (int i = 0; i < xv.size(); i++) xd[i] = xv[i];
+		//		}
+		//	}
+		//}
+		if (f.getCurve().m > m_max) break;
+		else if (f.value(xd)>deps)
 		{
 			f.setVariables(xv);
 			f.increaseCurve(xv);
@@ -301,7 +336,6 @@ void guiBladeDesigner::suctionSideButtonClicked()
 	int size = suctionSide.PPoints.size() - 2;
 	VectorXd x(size);
 	for (size_t i = 0; i < size; i++) x[i] = 0.2;
-	//minimization(f, x);
 	SidesFunction<float32> fps(pressureSide, pressureSideBC, false, inlet_radius, outlet_radius);
 	fps.isSuctionSide = false;
 	size = pressureSide.PPoints.size() - 2;
@@ -315,7 +349,7 @@ void guiBladeDesigner::suctionSideButtonClicked()
 	suctionBZ->setData(getBX(suctionSide), getBY(suctionSide));
 	suctionPP->setData(getPX(suctionSide), getPY(suctionSide));
 	ui.globalPlot->replot();
-	plotCurvature(pressureSide);
+	plotCurvature();
 	int endTime = clock();
 	ui.statusBar->showMessage("Time for minimization" + QString::number(endTime - startTime), 5000);
 	flags.isWallsCompute = true;

@@ -309,6 +309,9 @@ public:
 	T curvature_condition()
 	{
 		float32 sum = 0.0;
+
+		float32 c_begin = curve.curvature(0.0);
+		float32 c_end = curve.curvature(1.0);
 		for (auto &i : curvature)
 		{
 			if (i <= 0)
@@ -316,7 +319,9 @@ public:
 			else
 				sum += powf(EQUAL2EPS(i, 0.0, 0.1), 2);
 		}
-		return sum;
+		//return sum;
+		//return /*sum +*/ powf(c_begin, 2) + powf(c_end, 2);
+		return 0.0;
 	}
 	void curvatureRefresh(const vector<T> &variables)
 	{
@@ -337,7 +342,7 @@ public:
 		}
 		//recompute(variables);
 		curvatureRefresh(variables);
-		return coincidence_condition(variables) + tangent_condition() /*+ curvature_condition()*/;
+		return coincidence_condition(variables) + tangent_condition() + curvature_condition();
 	}
 	void add_PPoint(TVector &x)
 	{

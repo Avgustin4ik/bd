@@ -20,7 +20,7 @@ private slots:
 //POEHALI
 	void plotCurve(BezierCurve<float32> &curve);
 	void plotPoint(const Vertex2D<float32> &ptr);
-	void plotCurvature(BezierCurve<float32> &curve);
+	void plotCurvature();
 	void plot(BoundaryConditions<float32> &conditions);
 	void plot(vector<FishBone<float32>> &fb);
 	void plotTangents();
@@ -93,6 +93,9 @@ private:
 	QCPCurve *suctionBZ;
 	QCPCurve *pressurePP;
 	QCPCurve *pressureBZ;
+	QCPCurve *curvature_camber;
+	QCPCurve *curvature_suction;
+	QCPCurve *curvature_pressure;
 	BZCurve<float32> *line_camber;
 	BZCurve<float32> *line_suction;
 	BZCurve<float32> *line_pressure;
