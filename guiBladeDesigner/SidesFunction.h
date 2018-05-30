@@ -263,25 +263,22 @@ inline T SidesFunction<T>::coincidenceCondition()
 template<typename T>
 inline T SidesFunction<T>::curvatureCondition()
 {
-	double k = -1.0;
-	/*if (!isSuctionSide)
-		k = 1.0;*/
-	T c_begin = (curve.curvature(0.0) - k / inlet_radius, 2);
-	T c_end = (curve.curvature(1.0) + 1.0 / outlet_radius, 2);
-	/*int curvature_size = 18;
+	T c_begin = curve.curvature(0.0) + 1.0 / inlet_radius;
+	T c_end = curve.curvature(1.0) + 1.0 / inlet_radius;
+	int curvature_size = 19;
 	curvature.resize(curvature_size);
 	double t = 0.0;
-	double step = 1.0 / double(curvature_size + 2.0);
+	double step = 1.0 / double(curvature_size + 1.0);
 	double sum = 0.0;
-	double eps = 0.5;
+	double eps = 0.000;
 	for (auto &i : curvature)
 	{
 		t = t + step;
-		i = curve.curvature(t + step);
+		i = curve.curvature(t);
 		if (i > eps)
-			sum = sum + pow(i, 2);
-	}*/
-	return c_begin + c_end/* + sum*/;
+			sum = sum + i;
+	}
+	return c_begin + c_end + powf(sum,2);
 	//return 0.0;
 }
 template<typename T>

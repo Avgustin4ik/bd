@@ -316,13 +316,18 @@ void guiBladeDesigner::minimization(SidesFunction<T>& f, VectorXd & xd)
 		//		}
 		//	}
 		//}
-		if (f.getCurve().m > m_max) break;
+		if (f.getCurve().m > m_max) 
+		{
+			break;
+			//ui.statusBar->showMessage("the maximum degree of the curve is reached" + QString::number(f.value(xd)), 5000);
+		}
 		else if (f.value(xd)>deps)
 		{
 			f.setVariables(xv);
 			f.increaseCurve(xv);
 			xd.resize(xv.size());
 			for (int i = 0; i < xv.size(); i++) xd[i] = xv[i];
+			//ui.statusBar->showMessage("the curve is constructed" + QString::number(f.value(xd)), 5000);
 		}
 	}
 }
